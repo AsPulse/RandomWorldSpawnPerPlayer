@@ -16,7 +16,7 @@ class RespawnPointOverrider(
     private val worldSpawnManager: WorldSpawnManager
 ) : Listener {
     
-    private val spawnLocationGenerator = SpawnLocationGenerator(plugin.pluginConfig)
+    private val spawnLocationGenerator = SpawnLocationGenerator(plugin.pluginConfig, plugin)
     
     private fun getDefaultSupplier(player: Player): () -> Location {
         return spawnLocationGenerator.getDefaultSupplier(player)

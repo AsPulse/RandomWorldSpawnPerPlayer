@@ -1,5 +1,7 @@
 package dev.aspulse.randomWorldSpawnPerPlayer.config
 
+import org.bukkit.Location
+import org.bukkit.Material
 import java.util.Optional
 
 data class SpawnCondition(
@@ -8,6 +10,43 @@ data class SpawnCondition(
     val yUpperLimit: Optional<Int> = Optional.empty(),
     val yLowerLimit: Optional<Int> = Optional.empty()
 ) {
+    
+    fun checkSatisfied(location: Location): Boolean {
+        val world = location.world ?: return false
+        val x = location.blockX
+        val y = location.blockY
+        val z = location.blockZ
+
+        if (yUpperLimit.isPresent && y > yUpperLimit.get()) {
+            return false
+        }
+        
+        if (yLowerLimit.isPresent && y < yLowerLimit.get()) {
+            return false
+        }
+
+        if (nAboveAirBlocks.isPresent) {
+            val required = nAboveAirBlocks.get()
+            for (i in 0..<required) {
+                val block = world.getBlockAt(x, y + i, z)
+                if (!block.type.isAir) {
+                    break
+                }
+            }
+        }
+
+        if (nBelowOpaqueBlocks.isPresent) {
+            val required = nBelowOpaqueBlocks.get()
+            for (i in 1..required) {
+                val block = world.getBlockAt(x, y - i, z)
+                if (!block.type.isOccluding) {
+                    return false
+                }
+            }
+        }
+        
+        return true
+    }
     companion object {
         fun fromMap(map: Map<String, Any>?): SpawnCondition {
             if (map == null) return SpawnCondition()

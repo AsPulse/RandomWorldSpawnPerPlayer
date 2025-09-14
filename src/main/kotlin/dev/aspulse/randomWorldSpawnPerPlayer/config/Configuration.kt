@@ -6,6 +6,7 @@ import org.bukkit.Location
 data class Configuration(
     val center: Location,
     val radius: Int,
+    val maxRetries: Int,
     val spawnableCondition: SpawnCondition,
     val worldspawnCondition: SpawnCondition
 ) {
@@ -17,13 +18,14 @@ data class Configuration(
             val center = Location(
                 world,
                 (centerMap["x"] as? Number)?.toDouble() ?: 0.0,
-                (centerMap["y"] as? Number)?.toDouble() ?: 64.0,
+                0.0,
                 (centerMap["z"] as? Number)?.toDouble() ?: 0.0
             )
             
             return Configuration(
                 center = center,
                 radius = (map["radius"] as? Int) ?: 1000,
+                maxRetries = (map["max-retries"] as? Int) ?: 100,
                 spawnableCondition = SpawnCondition.fromMap(map["spawnable-condition"] as? Map<String, Any>),
                 worldspawnCondition = SpawnCondition.fromMap(map["worldspawn-condition"] as? Map<String, Any>)
             )
@@ -33,8 +35,9 @@ data class Configuration(
             val world = Bukkit.getWorld(worldName) ?: Bukkit.getWorlds().firstOrNull()
             
             return Configuration(
-                center = Location(world, 0.0, 64.0, 0.0),
+                center = Location(world, 0.0, 0.0, 0.0),
                 radius = 1000,
+                maxRetries = 100,
                 spawnableCondition = SpawnCondition(
                     nAboveAirBlocks = java.util.Optional.of(2),
                     nBelowOpaqueBlocks = java.util.Optional.of(1)

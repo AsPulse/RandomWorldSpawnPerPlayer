@@ -8,9 +8,9 @@
 ```yaml
 center:
   x: 0
-  y: 64
   z: 0
 radius: 1000
+max-retries: 100
 
 spawnable-condition:
   n-above-air-blocks: 2
@@ -27,12 +27,15 @@ worldspawn-condition:
 プレイヤーごとのワールドスポーンが分布する範囲の、中心座標を指定します。
 
 - `x`: 中心のX座標（デフォルト: 0）
-- `y`: 中心のY座標（デフォルト: 64）
 - `z`: 中心のZ座標（デフォルト: 0）
 
 ### radius
 プレイヤーごとのワールドスポーンが分布する範囲の、半径（ブロック単位）を指定します。  
 デフォルト: 1000
+
+### max-retries
+条件を満たすスポーン地点を探す最大試行回数を指定します。  
+デフォルト: 100
 
 ### spawnable-condition
 プレイヤーがスポーン可能な地点の条件を指定します。

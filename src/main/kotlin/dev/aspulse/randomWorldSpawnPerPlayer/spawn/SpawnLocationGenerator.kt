@@ -1,14 +1,13 @@
 package dev.aspulse.randomWorldSpawnPerPlayer.spawn
 
-import com.google.common.math.IntMath.pow
 import dev.aspulse.randomWorldSpawnPerPlayer.config.Configuration
 import dev.aspulse.randomWorldSpawnPerPlayer.config.SpawnCondition
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
-import java.lang.Math.pow
 import java.util.Optional
 import kotlin.math.cos
+import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.random.Random
@@ -44,7 +43,7 @@ class SpawnLocationGenerator(private val config: Configuration, private val plug
         val centerZ = config.center.z
         
         val angle = Random.nextDouble() * 2 * Math.PI
-        val distance = sqrt(Random.nextDouble() * pow(config.radius, 2))
+        val distance = sqrt(Random.nextDouble() * config.radius.toDouble().pow(2.0))
         
         val x = centerX + distance * cos(angle)
         val z = centerZ + distance * sin(angle)
@@ -77,7 +76,7 @@ class SpawnLocationGenerator(private val config: Configuration, private val plug
             
             val candidate = Location(world, x.toDouble(), y.toDouble(), z.toDouble())
             if (spawnCondition.checkSatisfied(candidate)) {
-                val distance = kotlin.math.sqrt((dx * dx + dz * dz).toDouble())
+                val distance = sqrt((dx * dx + dz * dz).toDouble())
                 plugin.logger.info("Found suitable location at distance ${"%.1f".format(distance)} blocks from original")
                 return Optional.of(candidate)
             }

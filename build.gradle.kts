@@ -16,7 +16,7 @@ repositories {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.21.8-R0.1-SNAPSHOT")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    implementation(kotlin("stdlib"))
 }
 
 tasks {
@@ -27,6 +27,10 @@ tasks {
         }
     }
 
+    named("assemble") { dependsOn("shadowJar") }
+
+    jar { enabled = false }
+
     runServer {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
@@ -36,6 +40,9 @@ tasks {
 }
 
 val targetJavaVersion = 21
+java {
+    toolchain { languageVersion.set(JavaLanguageVersion.of(targetJavaVersion)) }
+}
 kotlin {
     jvmToolchain(targetJavaVersion)
 }

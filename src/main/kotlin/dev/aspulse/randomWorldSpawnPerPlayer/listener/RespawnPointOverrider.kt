@@ -21,6 +21,17 @@ class RespawnPointOverrider(
     private fun getDefaultSupplier(player: Player): () -> Location {
         return spawnLocationGenerator.getDefaultSupplier(player)
     }
+    
+    private fun centerLocation(location: Location): Location {
+        return Location(
+            location.world,
+            location.blockX + 0.5,
+            location.y,
+            location.blockZ + 0.5,
+            location.yaw,
+            location.pitch
+        )
+    }
 
     
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -34,7 +45,7 @@ class RespawnPointOverrider(
         // Check if the world spawn location satisfies spawnable conditions
         if (plugin.pluginConfig.spawnableCondition.checkSatisfied(worldSpawn)) {
             plugin.logger.info("Respawn location for ${player.name} was ok and set to: $worldSpawn")
-            event.respawnLocation = worldSpawn
+            event.respawnLocation = centerLocation(worldSpawn)
             return
         }
         
@@ -43,14 +54,14 @@ class RespawnPointOverrider(
         if (searchResult.isPresent) {
             val adjustedLocation = searchResult.get()
             plugin.logger.info("Respawn location for ${player.name} adjusted to: $adjustedLocation (original didn't satisfy spawnable conditions)")
-            event.respawnLocation = adjustedLocation
+            event.respawnLocation = centerLocation(adjustedLocation)
             return
         }
         
         // Fallback: use the original world spawn even if it doesn't satisfy conditions
         plugin.logger.warning("Could not find suitable respawn location for ${player.name} near $worldSpawn")
         plugin.logger.warning("Using original location despite not satisfying spawnable conditions")
-        event.respawnLocation = worldSpawn
+        event.respawnLocation = centerLocation(worldSpawn)
     }
 
     
@@ -62,7 +73,7 @@ class RespawnPointOverrider(
         val spawnLocation = worldSpawnManager.getOrDefault(player, getDefaultSupplier(player))
         
         plugin.logger.info("First join spawn for ${player.name} set to: $spawnLocation")
-        event.spawnLocation = spawnLocation
+        event.spawnLocation = centerLocation(spawnLocation)
     }
 
 }

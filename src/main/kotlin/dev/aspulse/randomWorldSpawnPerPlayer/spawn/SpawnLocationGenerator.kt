@@ -58,17 +58,28 @@ class SpawnLocationGenerator(private val config: Configuration, private val plug
         val baseX = location.blockX
         val baseZ = location.blockZ
         
-        // Search in a 20x20 area (-10 to +10 offset)
-        for (xOffset in -10..10) {
-            for (zOffset in -10..10) {
-                val x = baseX + xOffset
-                val z = baseZ + zOffset
-                val y = world.getHighestBlockYAt(x, z) + 1
-                
-                val candidate = Location(world, x.toDouble(), y.toDouble(), z.toDouble())
-                if (spawnCondition.checkSatisfied(candidate)) {
-                    return Optional.of(candidate)
-                }
+        // Create a list of offsets sorted by distance from center
+        val offsets = mutableListOf<Pair<Int, Int>>()
+        for (dx in -10..10) {
+            for (dz in -10..10) {
+                offsets.add(dx to dz)
+            }
+        }
+        
+        // Sort by distance from center (closer points first)
+        offsets.sortBy { (dx, dz) -> dx * dx + dz * dz }
+        
+        // Check each position in order of distance
+        for ((dx, dz) in offsets) {
+            val x = baseX + dx
+            val z = baseZ + dz
+            val y = world.getHighestBlockYAt(x, z) + 1
+            
+            val candidate = Location(world, x.toDouble(), y.toDouble(), z.toDouble())
+            if (spawnCondition.checkSatisfied(candidate)) {
+                val distance = kotlin.math.sqrt((dx * dx + dz * dz).toDouble())
+                plugin.logger.info("Found suitable location at distance ${"%.1f".format(distance)} blocks from original")
+                return Optional.of(candidate)
             }
         }
         

@@ -29,10 +29,28 @@ class RespawnPointOverrider(
         if (event.isAnchorSpawn) return
 
         val player = event.player
-        val respawnLocation = worldSpawnManager.getOrDefault(player, getDefaultSupplier(player))
-
-        plugin.logger.info("Respawn location for ${player.name} was forced to: $respawnLocation")
-        event.respawnLocation = respawnLocation
+        val worldSpawn = worldSpawnManager.getOrDefault(player, getDefaultSupplier(player))
+        
+        // Check if the world spawn location satisfies spawnable conditions
+        if (plugin.pluginConfig.spawnableCondition.checkSatisfied(worldSpawn)) {
+            plugin.logger.info("Respawn location for ${player.name} was ok and set to: $worldSpawn")
+            event.respawnLocation = worldSpawn
+            return
+        }
+        
+        // Try to find a suitable location nearby using beamSearch
+        val searchResult = spawnLocationGenerator.beamSearch(plugin.pluginConfig.spawnableCondition, worldSpawn)
+        if (searchResult.isPresent) {
+            val adjustedLocation = searchResult.get()
+            plugin.logger.info("Respawn location for ${player.name} adjusted to: $adjustedLocation (original didn't satisfy spawnable conditions)")
+            event.respawnLocation = adjustedLocation
+            return
+        }
+        
+        // Fallback: use the original world spawn even if it doesn't satisfy conditions
+        plugin.logger.warning("Could not find suitable respawn location for ${player.name} near $worldSpawn")
+        plugin.logger.warning("Using original location despite not satisfying spawnable conditions")
+        event.respawnLocation = worldSpawn
     }
 
     

@@ -30,7 +30,7 @@ data class SpawnCondition(
             for (i in 0..<required) {
                 val block = world.getBlockAt(x, y + i, z)
                 if (!block.type.isAir) {
-                    break
+                    return false
                 }
             }
         }

@@ -17,7 +17,7 @@ data class Configuration(
             val center = Location(
                 world,
                 (centerMap["x"] as? Number)?.toDouble() ?: 0.0,
-                (centerMap["y"] as? Number)?.toDouble() ?: 64.0,
+                0.0,
                 (centerMap["z"] as? Number)?.toDouble() ?: 0.0
             )
             
@@ -33,7 +33,7 @@ data class Configuration(
             val world = Bukkit.getWorld(worldName) ?: Bukkit.getWorlds().firstOrNull()
             
             return Configuration(
-                center = Location(world, 0.0, 64.0, 0.0),
+                center = Location(world, 0.0, 0.0, 0.0),
                 radius = 1000,
                 spawnableCondition = SpawnCondition(
                     nAboveAirBlocks = java.util.Optional.of(2),

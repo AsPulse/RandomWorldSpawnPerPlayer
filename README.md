@@ -1,6 +1,6 @@
 # RandomWorldSpawnPerPlayer
 
-プレイヤーごとにランダムなワールドスポーンうを設定するSpigotプラグイン
+プレイヤーごとにランダムなワールドスポーンを設定するSpigotプラグイン
 
 ## Config
 

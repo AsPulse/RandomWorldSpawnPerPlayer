@@ -1,0 +1,32 @@
+# Build directories
+build/
+target/
+out/
+bin/
+
+# Gradle
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Java
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+*.war
+*.ear
+hs_err_pid*
+
+# Logs
+*.log
+logs/
+
+# Test server
+test-server/

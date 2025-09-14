@@ -1,0 +1,5 @@
+name: RandomWorldSpawnPerPlayer
+version: '1.0-SNAPSHOT'
+main: dev.aspulse.randomWorldSpawnPerPlayer.RandomWorldSpawnPerPlayer
+api-version: '1.21'
+authors: [ AsPulse <contact@aspulse.dev> ]
